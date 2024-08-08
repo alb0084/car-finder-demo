@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/alb0084/car-finder-demo/static/css/main.75719650.css",
+    "main.js": "/alb0084/car-finder-demo/static/js/main.b2b4fe56.js",
+    "index.html": "/alb0084/car-finder-demo/index.html",
+    "main.75719650.css.map": "/alb0084/car-finder-demo/static/css/main.75719650.css.map",
+    "main.b2b4fe56.js.map": "/alb0084/car-finder-demo/static/js/main.b2b4fe56.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.75719650.css",
+    "static/js/main.b2b4fe56.js"
+  ]
+}
