@@ -2,5 +2,5 @@ services:
   - type: web
     name: my-service
     env: node
-    buildCommand: npm install --legacy-peer-deps
+    buildCommand: npm install --legacy-peer-deps --verbose && npm run build
     startCommand: npm start
