@@ -22,8 +22,11 @@ Car Finder is a web application designed to help users search for and save cars 
 # How To Launch it
 
 - git clone ...
+- use psql to import relations in local. (pg_restore --host=<host> --port=<port> --username=<username> --dbname=<dbname> --no-owner --verbose <path_to_dump_file>)
 - 'npm i' on the root project
 - 'npm i' inside the view folder (react project)
+- npm run start (in folder view)
+- npm run start (in root folder) 
 
 ## Unit Test Cases
 
