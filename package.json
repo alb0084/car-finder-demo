@@ -4,8 +4,12 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "test": "jest",
     "start": "node server.js"
+  },
+  "resolutions": {
+    "express-graphql/graphql": "16.9.0"
   },
   "keywords": [],
   "author": "",
@@ -36,5 +40,8 @@
     "supertest": "^7.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "npm-force-resolutions": "^0.0.10"
   }
 }
