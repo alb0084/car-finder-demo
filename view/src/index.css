@@ -1,0 +1,21 @@
+#root {
+  height: 100%;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  /* BGC slitely dark then white */
+  background-color: #f7f7f7;
+  /* Font di default */
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+
+.r-flex-13awgt0 {
+  height: 100%;
+}
