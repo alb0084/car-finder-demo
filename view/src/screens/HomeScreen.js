@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Box, FlatList, Text, VStack, Heading, Spinner, Center, Button, HStack, ScrollView, Input, Select, Slider, IconButton,
+    Box, FlatList, Text, VStack, Heading, Spinner, Center, Button, HStack, ScrollView, Input, Select, Slider, IconButton, Alert
 } from 'native-base';
 import SlideBar from '../components/SlideBar';
 import { FaTag } from 'react-icons/fa';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { selectAuth } from '../redux/slices/authSlice';
 import UserStatus from '../components/UserStatus';
 import HighlightText from '../components/HighlightText';
+import { fetchAutomobiles, saveSearch, deleteSearch } from '../api';
 
 
 
@@ -29,37 +30,19 @@ const HomeScreen = () => {
     const [savedSearches, setSavedSearches] = useState(['']);
     const [isSlideBarOpen, setSlideBarOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     const itemsPerPage = 10; // Number of items per page
 
     useEffect(() => {
-        // Get car from server
-        const fetchAutomobiles = async () => {
+        const getAutomobiles = async () => {
             try {
-                const response = await fetch(
-                    `http://localhost:3030/api/automobiles?page=${page}&limit=${itemsPerPage}`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        credentials: 'include', 
-                    }
-                );
-
-                if (!response.ok) {
-                    navigate('/login');
-                    throw new Error('Failed to fetch automobiles');
-                }
-
-                const data = await response.json();
-
+                const data = await fetchAutomobiles(page, itemsPerPage);
                 if (data.automobiles) {
                     setAutomobiles(data.automobiles);
                     setTotalPages(data.totalPages);
                     setFilteredAutomobiles(data.automobiles);
                 }
-
                 setLoading(false);
             } catch (error) {
                 console.error('Error during getting cars:', error);
@@ -68,8 +51,7 @@ const HomeScreen = () => {
             }
         };
 
-        fetchAutomobiles();
-
+        getAutomobiles();
     }, [page, navigate]);
 
     useEffect(() => {
@@ -106,10 +88,6 @@ const HomeScreen = () => {
         setFilteredAutomobiles(filtered);
     }, [searchQuery, sortOption, fuelFilter, priceRange, bodyStyleFilter, automobiles]);
 
-    // useEffect(() => {
-    // if (!user || !isAuthenticated) navigate('/') with google this does't work...
-    // }, [user, isAuthenticated,navigate])
-
     const clearFilters = () => {
         setSearchQuery('');
         setSortOption('');
@@ -126,54 +104,39 @@ const HomeScreen = () => {
         setIsModalOpen(false);
     };
 
-    const saveSearch = async (searchTitle) => {
+    const handleSaveSearch = async (searchTitle) => {
         if (searchTitle.trim()) {
             try {
-                const response = await fetch('http://localhost:3030/api/saved-searches', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include', // Include session cookie 
-                    body: JSON.stringify({
-                        title: searchTitle,
-                        fuelFilter,
-                        bodyStyleFilter,
-                        minPrice: priceRange[0],
-                        maxPrice: priceRange[1],
-                        sortOption,
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error while saving the search');
-                }
-
+                const searchDetails = {
+                    title: searchTitle,
+                    fuelFilter,
+                    bodyStyleFilter,
+                    minPrice: priceRange[0],
+                    maxPrice: priceRange[1],
+                    sortOption,
+                };
+                await saveSearch(searchDetails);
                 closeModal();
             } catch (error) {
                 console.error('Error while saving the search:', error);
             }
         } else {
-            alert('Please enter a title for the search');
+            setAlertMessage('Please enter a title for the search');
+            setTimeout(() => {
+                setAlertMessage('');
+            }, 2000);
         }
     };
 
-    const deleteSearch = async (id) => {
+    const handleDeleteSearch = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3030/api/saved-searches/${id}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to delete search');
-            }
-
+            await deleteSearch(id);
             setSavedSearches(savedSearches.filter((search) => search.id !== id));
         } catch (error) {
             console.error('Error while deleting the search:', error);
         }
     };
+
 
     if (loading) {
         return (
@@ -193,14 +156,21 @@ const HomeScreen = () => {
                     onPress={() => setSlideBarOpen(true)}
                 />
                 <UserStatus userName={user} isAuthenticated={isAuthenticated} />
-
             </HStack>
+            {alertMessage ? (
+                <Alert w="100%" status="error" mb={4}>
+                    <VStack space={2} alignItems="center">
+                        <Alert.Icon />
+                        <Text>{alertMessage}</Text>
+                    </VStack>
+                </Alert>
+            ) : null}
             <>
                 <SlideBar
                     isOpen={isSlideBarOpen}
                     onClose={() => setSlideBarOpen(false)}
                     savedSearches={savedSearches}
-                    onDelete={deleteSearch}
+                    onDelete={handleDeleteSearch}
                 />
                 <Center flex={1} bg="gray.100" height={'100%'} >
                     <Box width="100%" maxWidth="700px" height={'100%'} bg="white" borderRadius="md" shadow={1} overflow="hidden">
@@ -339,7 +309,7 @@ const HomeScreen = () => {
                         <CustomModal
                             isOpen={isModalOpen}
                             onClose={closeModal}
-                            onSave={saveSearch} // 
+                            onSave={handleSaveSearch} // 
                             actionType="save" // Can be "delete", "share", or "save"
                         />
                     </Box>

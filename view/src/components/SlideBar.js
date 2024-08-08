@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-    Box,
-    VStack,
-    Text,
-    IconButton,
-    Button,
-    HStack,
-    Tooltip,
-    Alert
-} from "native-base";
+import { Box, VStack, Text, IconButton, Button, HStack, Tooltip, Alert } from "native-base";
 import { FaTimes, FaInfoCircle, FaShare } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import CustomModal from '../components/CustomModal';
 import { truncateText } from '../utils/helpers'
+import { fetchSavedSearches, deleteSavedSearch, shareSavedSearch, logout } from '../api';
+
 
 const SlideBar = ({ isOpen, onClose }) => {
     const [savedSearches, setSavedSearches] = useState([]);
@@ -24,53 +17,24 @@ const SlideBar = ({ isOpen, onClose }) => {
     const [messageAlert, setMessageAlert] = useState('')
 
     useEffect(() => {
-        const fetchSavedSearches = async () => {
+        const fetchSearches = async () => {
             if (isOpen) {
                 try {
-                    const response = await fetch(
-                        "http://localhost:3030/api/saved-searches",
-                        {
-                            method: "GET",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            credentials: "include",
-                        }
-                    );
-
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch saved searches");
-                    }
-
-                    const data = await response.json();
+                    const data = await fetchSavedSearches();
                     setSavedSearches(data);
                 } catch (error) {
-                    console.error(
-                        "Error during getting the search:",
-                        error
-                    );
+                    console.error('Error during getting the search:', error);
                 }
             }
         };
 
-        fetchSavedSearches();
+        fetchSearches();
     }, [isOpen]);
 
     const confirmDeleteSearch = async () => {
         if (searchToDelete === null) return;
         try {
-            const response = await fetch(
-                `http://localhost:3030/api/saved-searches/${searchToDelete}`,
-                {
-                    method: "DELETE",
-                    credentials: "include",
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error("Error during deletion of saved search");
-            }
-
+            await deleteSavedSearch(searchToDelete);
             setSavedSearches((prevSearches) =>
                 prevSearches.filter((search) => search.id !== searchToDelete)
             );
@@ -84,35 +48,30 @@ const SlideBar = ({ isOpen, onClose }) => {
     const shareSearch = async (email) => {
         if (searchToShare.id === null) return;
         try {
-            const response = await fetch(
-                `http://localhost:3030/api/share-search`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({
-                        searchId: searchToShare.id,
-                        email: email,
-                        details: searchToShare
-                    }),
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error("Error during sharing the saved search");
-            }
+            await shareSavedSearch(searchToShare, email);
             setAlert(true);
             setMessageAlert(`The search has been shared with ${email}.`);
             setModalOpen(false);
             setTimeout(() => {
                 setAlert(false);
-                setMessageAlert("");
+                setMessageAlert('');
             }, 2000);
         } catch (error) {
             console.error(error.message);
             setModalOpen(false);
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            const {response} = await logout();
+            if (response.ok) {
+                window.location.href = "/";
+            } else {
+                console.error("Error during logout");
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
         }
     };
 
@@ -132,22 +91,6 @@ const SlideBar = ({ isOpen, onClose }) => {
         setSearchToDelete(null);
         setSearchToShare(null);
         setModalOpen(false);
-    };
-
-    const handleLogout = async () => {
-        try {
-            const response = await fetch("http://localhost:3030/logout", {
-                method: "GET",
-                credentials: "include",
-            });
-            if (response.ok) {
-                window.location.href = "/";
-            } else {
-                console.error("Error during logout");
-            }
-        } catch (error) {
-            console.error("Error during logout:", error);
-        }
     };
 
     return (

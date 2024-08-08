@@ -1,13 +1,14 @@
-// src/components/AuthForm.js
-
 import { useState } from 'react';
 import { Button, Center, FormControl, Input, VStack, Heading, Text, Alert } from 'native-base';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/slices/authSlice';
+import { login, googleLogin } from '../api';
+
 import Card from './Card';
 
 const AuthForm = () => {
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -16,19 +17,12 @@ const AuthForm = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:3030/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
-                credentials: 'include', // Include session cookies 
-            });
+            const data = await login(username, password);
 
-            if (response.ok) {
-                // const data = await response.json();
-                dispatch(loginSuccess(username)); // Save user details in Redux
+            if (data.success) {
+                dispatch(loginSuccess(username));
                 navigate('/home');
             } else {
-                const data = await response.json();
                 setError(data.message || 'Error during login');
             }
         } catch (error) {
@@ -36,7 +30,7 @@ const AuthForm = () => {
         }
     };
 
-    const handleGoogleLogin = () => window.location.href = 'http://localhost:3030/auth/google';
+    const handleGoogleLogin = () => googleLogin();
 
     return (
         <Center flex={1} px="0">
