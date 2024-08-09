@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import CustomModal from '../components/CustomModal';
 import { truncateText } from '../utils/helpers'
 import { fetchSavedSearches, deleteSavedSearch, shareSavedSearch, logout } from '../api';
-
+import { SLIDE_BAR_STRINGS } from '../utils/constants';
 
 const SlideBar = ({ isOpen, onClose }) => {
+
     const [savedSearches, setSavedSearches] = useState([]);
     const [searchToDelete, setSearchToDelete] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
@@ -15,7 +16,7 @@ const SlideBar = ({ isOpen, onClose }) => {
     const [searchToShare, setSearchToShare] = useState(null);
     const [alert, setAlert] = useState(false);
     const [messageAlert, setMessageAlert] = useState('')
-
+    const [isSuccess, setIsSuccess] = useState(true);
     useEffect(() => {
         const fetchSearches = async () => {
             if (isOpen) {
@@ -40,6 +41,14 @@ const SlideBar = ({ isOpen, onClose }) => {
             );
             setModalOpen(false);
         } catch (error) {
+            setMessageAlert('Error during delete search');
+            setAlert(true);
+            setIsSuccess(false);
+            setTimeout(() => {
+                setMessageAlert('');
+                setIsSuccess(false);
+                setAlert(false);
+            }, 2000);
             console.error(error.message);
             setModalOpen(false);
         }
@@ -57,6 +66,14 @@ const SlideBar = ({ isOpen, onClose }) => {
                 setMessageAlert('');
             }, 2000);
         } catch (error) {
+            setMessageAlert('Error during sharing search');
+            setIsSuccess(false);
+            setAlert(true);
+            setTimeout(() => {
+                setMessageAlert('');
+                setIsSuccess(true);
+                setAlert(false);
+            }, 2000);
             console.error(error.message);
             setModalOpen(false);
         }
@@ -64,13 +81,17 @@ const SlideBar = ({ isOpen, onClose }) => {
 
     const handleLogout = async () => {
         try {
-            const {response} = await logout();
+            const { response } = await logout();
             if (response.ok) {
                 window.location.href = "/";
             } else {
                 console.error("Error during logout");
             }
         } catch (error) {
+            setMessageAlert('Error during logout');
+            setTimeout(() => {
+                setMessageAlert('');
+            }, 2000);
             console.error("Error during logout:", error);
         }
     };
@@ -122,7 +143,7 @@ const SlideBar = ({ isOpen, onClose }) => {
                             <Box style={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1 }}>
                                 <HStack justifyContent={"space-between"}>
                                     <Text fontSize="lg" bold alignItems={"center"}>
-                                        Saved Searches
+                                        {SLIDE_BAR_STRINGS['SAVED_SEARCHES_TITLE']}
                                     </Text>
                                     <IconButton icon={<FaTimes size={16} />} onPress={onClose} />
                                 </HStack>
@@ -144,19 +165,19 @@ const SlideBar = ({ isOpen, onClose }) => {
                                                 label={
                                                     <Box>
                                                         <Text color={"white"}>
-                                                            Fuel Filter: {search.fuelFilter || "None"}
+                                                            {SLIDE_BAR_STRINGS['TOOLTIP_FUEL_FILTER']}: {search.fuelFilter || "None"}
                                                         </Text>
                                                         <Text color={"white"}>
-                                                            Body Style Filter: {search.bodyStyleFilter || "None"}
+                                                            {SLIDE_BAR_STRINGS['TOOLTIP_BODY_STYLE_FILTER']}: {search.bodyStyleFilter || "None"}
                                                         </Text>
                                                         <Text color={"white"}>
-                                                            Min Price: ${search.minPrice || "None"}
+                                                            {SLIDE_BAR_STRINGS['TOOLTIP_MIN_PRICE']}: ${search.minPrice || "None"}
                                                         </Text>
                                                         <Text color={"white"}>
-                                                            Max Price: ${search.maxPrice || "None"}
+                                                            {SLIDE_BAR_STRINGS['TOOLTIP_MAX_PRICE']}: ${search.maxPrice || "None"}
                                                         </Text>
                                                         <Text color={"white"}>
-                                                            Sort Option: {search.sortOption || "None"}
+                                                            {SLIDE_BAR_STRINGS['TOOLTIP_SORT_OPTION']}: {search.sortOption || "None"}
                                                         </Text>
                                                     </Box>
                                                 }
@@ -181,7 +202,7 @@ const SlideBar = ({ isOpen, onClose }) => {
                             </Box>
                             <Box style={{ position: 'sticky', bottom: 0, backgroundColor: 'white', zIndex: 1 }}>
                                 <Button onPress={handleLogout} colorScheme="red" size="sm">
-                                    Logout
+                                    {SLIDE_BAR_STRINGS['SLIDE_BAR_LOGUT']}
                                 </Button>
                             </Box>
                         </VStack>
@@ -190,7 +211,7 @@ const SlideBar = ({ isOpen, onClose }) => {
             </AnimatePresence>
 
             <>
-                {alert && <Alert status="success" mb="4">{messageAlert}</Alert>}
+                {alert && <Alert status={isSuccess ? "success" : "error"} mb="4">{messageAlert}</Alert>}
             </>
             {/* CustomModal made with framer Motion */}
             <>
@@ -200,9 +221,7 @@ const SlideBar = ({ isOpen, onClose }) => {
                     onConfirm={confirmDeleteSearch}
                     actionType={modalAction}
                     onShare={shareSearch}
-
                 />
-
             </>
         </>
     );

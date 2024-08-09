@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Text, Button, VStack, HStack, Input } from 'native-base';
+import { MODAL_STRINGS } from '../utils/constants';
+
 
 const backdropVariants = {
     hidden: { opacity: 0 },
@@ -81,20 +83,20 @@ const CustomModal = ({ isOpen, onClose, onConfirm, actionType, onShare, onSave }
                             {actionType === 'delete' && (
                                 <>
                                     <Text fontSize="lg" bold>
-                                        Delete saved search?
+                                        {MODAL_STRINGS['DELETE_TITLE']}
                                     </Text>
-                                    <Text>Are you sure you want to delete this saved search?</Text>
+                                    <Text>{MODAL_STRINGS['DELETE_MESSAGE']}</Text>
                                 </>
                             )}
 
                             {actionType === 'share' && (
                                 <>
                                     <Text fontSize="lg" bold>
-                                        Share saved search
+                                        {MODAL_STRINGS['Share saved search']}
                                     </Text>
-                                    <Text>Type email to share this search:</Text>
+                                    <Text>{MODAL_STRINGS['SHARE_MESSAGE']}</Text>
                                     <Input
-                                        placeholder="Email"
+                                        placeholder={MODAL_STRINGS['SHARE_PLACEHOLDER']}
                                         value={email}
                                         onChangeText={setEmail}
                                     />
@@ -104,11 +106,11 @@ const CustomModal = ({ isOpen, onClose, onConfirm, actionType, onShare, onSave }
                             {actionType === 'save' && (
                                 <>
                                     <Text fontSize="lg" bold>
-                                        Save search preset
+                                        {MODAL_STRINGS['SAVE_TITLE']}
                                     </Text>
-                                    <Text>Insert title for the search:</Text>
+                                    <Text>{MODAL_STRINGS['SAVE_MESSAGE']}</Text>
                                     <Input
-                                        placeholder="Title Research"
+                                        placeholder={MODAL_STRINGS['SAVE_PLACEHOLDER']}
                                         value={searchTitle}
                                         onChangeText={setSearchTitle}
                                         mb={4}
@@ -118,14 +120,14 @@ const CustomModal = ({ isOpen, onClose, onConfirm, actionType, onShare, onSave }
 
                             <HStack space={2} justifyContent="flex-end">
                                 <Button variant="ghost" onPress={onClose}>
-                                    Cancel
+                                    {MODAL_STRINGS['CANCEL_BUTTON']}
                                 </Button>
                                 <Button colorScheme="blue" onPress={handleConfirm}>
                                     {actionType === 'delete'
-                                        ? 'Yes, Delete'
+                                        ? MODAL_STRINGS['CONFIRM_DELETE_BUTTON']
                                         : actionType === 'share'
-                                            ? 'Share'
-                                            : 'Save'}
+                                            ? MODAL_STRINGS['CONFIRM_SHARE_BUTTON']
+                                            : MODAL_STRINGS['CONFIRM_SAVE_BUTTON']}
                                 </Button>
                             </HStack>
                         </VStack>

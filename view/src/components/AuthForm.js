@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/slices/authSlice';
 import { login, googleLogin } from '../api';
-
+import { LOGIN_PAGE_STRINGS } from '../utils/constants';
 import Card from './Card';
 
 const AuthForm = () => {
@@ -37,22 +37,24 @@ const AuthForm = () => {
             <Card>
                 <VStack space={4} maxW="300">
                     <Heading size="lg" mb="6" textAlign="center">
-                        Car Finder
+                        {LOGIN_PAGE_STRINGS['HEADING']}
                     </Heading>
-                    {error && <Alert status="error" mb="4">{error}</Alert>}
+                    {error && <Alert status="error" mb="4">{LOGIN_PAGE_STRINGS['ERROR_ALERT'](error)}</Alert>}
                     <FormControl isRequired>
-                        <FormControl.Label>Username</FormControl.Label>
+                        <FormControl.Label>
+                            {LOGIN_PAGE_STRINGS['USERNAME_LABEL']}
+                        </FormControl.Label>
                         <Input
-                            placeholder="Insert username"
+                            placeholder={LOGIN_PAGE_STRINGS['USERNAME_PLACEHOLDER']}
                             value={username}
                             onChangeText={(text) => setUsername(text)}
                             autoCapitalize="none"
                         />
                     </FormControl>
                     <FormControl isRequired>
-                        <FormControl.Label>Password</FormControl.Label>
+                        <FormControl.Label>{LOGIN_PAGE_STRINGS['PASSWORD_LABEL']}</FormControl.Label>
                         <Input
-                            placeholder="Insert password"
+                            placeholder={LOGIN_PAGE_STRINGS['PASSWORD_PLACEHOLDER']}
                             value={password}
                             onChangeText={(text) => setPassword(text)}
                             type="password"
@@ -60,13 +62,14 @@ const AuthForm = () => {
                         />
                     </FormControl>
                     <Button mt="5" onPress={handleLogin} colorScheme="blue">
-                        Sign in
+                        {LOGIN_PAGE_STRINGS['SIGN_IN_BUTTON']}
+
                     </Button>
                     <Text mt="6" textAlign="center" color="gray.500">
-                        or sign in with Google
+                        {LOGIN_PAGE_STRINGS['SIGN_IN_WITH_GOOGLE_TEXT']}
                     </Text>
                     <Button mt="2" onPress={handleGoogleLogin} colorScheme="red">
-                        Google Sign in
+                        {LOGIN_PAGE_STRINGS['GOOGLE_SIGN_IN_BUTTON']}
                     </Button>
                 </VStack>
             </Card>

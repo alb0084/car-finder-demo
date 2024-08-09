@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MOCK_PAGE_STRINGS } from '../utils/strings';
 
 const HomeScreenMock = () => {
     const [automobiles, setAutomobiles] = useState([]);
@@ -53,34 +54,34 @@ const HomeScreenMock = () => {
 
     return (
         <div>
-            <h1>Cars List</h1>
+            <h1>{MOCK_PAGE_STRINGS['CARS_LIST_HEADING']}</h1>
             <input
-                placeholder="Search for model"
+                placeholder={MOCK_PAGE_STRINGS['Search for model']}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <label htmlFor="fuel-filter">Filter for fuel</label>
+            <label htmlFor="fuel-filter">{MOCK_PAGE_STRINGS['FILTER_FUEL_LABEL']}</label>
             <select id="fuel-filter" onChange={(e) => setFuelFilter(e.target.value)} value={fuelFilter}>
-                <option value="">All</option>
-                <option value="Gas">Gas</option>
-                <option value="Diesel">Diesel</option>
+                <option value="">{MOCK_PAGE_STRINGS['FILTER_FUEL_ALL']}</option>
+                <option value="Gas">{MOCK_PAGE_STRINGS['FILTER_FUEL_GAS']}</option>
+                <option value="Diesel">{MOCK_PAGE_STRINGS['FILTER_FUEL_DIESEL']}</option>
             </select>
-            <label htmlFor="body-style-filter">Filter for style car body</label>
+            <label htmlFor="body-style-filter">{MOCK_PAGE_STRINGS['FILTER_BODY_STYLE_LABEL']}</label>
             <select id="body-style-filter" onChange={(e) => setBodyStyleFilter(e.target.value)} value={bodyStyleFilter}>
-                <option value="">All</option>
-                <option value="Sedan">Sedan</option>
-                <option value="Convertible">Convertible</option>
-                <option value="Hatchback">Hatchback</option>
-                <option value="Hardtop">Hardtop</option>
-                <option value="Station Wagon">Station Wagon</option>
+                <option value="">{MOCK_PAGE_STRINGS['FILTER_BODY_STYLE_ALL']}</option>
+                <option value="Sedan">{MOCK_PAGE_STRINGS['FILTER_BODY_STYLE_SEDAN']}</option>
+                <option value="Convertible">{MOCK_PAGE_STRINGS['FILTER_BODY_STYLE_CONVERTIBLE']}</option>
+                <option value="Hatchback">{MOCK_PAGE_STRINGS['FILTER_BODY_STYLE_HATCHBACK']}</option>
+                <option value="Hardtop">{MOCK_PAGE_STRINGS['FILTER_BODY_STYLE_HARDTOP']}</option>
+                <option value="Station Wagon">{MOCK_PAGE_STRINGS['FILTER_BODY_STYLE_STATION_WAGON']}</option>
             </select>
-            <label htmlFor="sort-by">Sort by</label>
+            <label htmlFor="sort-by">{MOCK_PAGE_STRINGS['SORT_BY_LABEL']}</label>
             <select id="sort-by" onChange={(e) => setSortOption(e.target.value)} value={sortOption}>
-                <option value="">Sort by</option>
-                <option value="priceLowToHigh">Price: Lower</option>
-                <option value="priceHighToLow">Price: Higher</option>
-                <option value="yearNewest">Year: Newest</option>
-                <option value="yearOldest">Year: Oldest</option>
+                <option value="">{MOCK_PAGE_STRINGS['SORT_BY_LABEL']}</option>
+                <option value="priceLowToHigh">{MOCK_PAGE_STRINGS['SORT_PRICE_LOW_TO_HIGH']}</option>
+                <option value="priceHighToLow">{MOCK_PAGE_STRINGS['SORT_PRICE_HIGH_TO_LOW']}</option>
+                <option value="yearNewest">{MOCK_PAGE_STRINGS['SORT_YEAR_NEWEST']}</option>
+                <option value="yearOldest">{MOCK_PAGE_STRINGS['SORT_YEAR_OLDEST']}t</option>
             </select>
             <input
                 type="range"
@@ -99,15 +100,15 @@ const HomeScreenMock = () => {
                 onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
             />
             <p>{`$${priceRange[0]} - $${priceRange[1]}`}</p>
-            <button onClick={clearFilters}>Clean Filter</button>
+            <button onClick={clearFilters}>{MOCK_PAGE_STRINGS['CLEAN_FILTER_BUTTON']}</button>
             <div>
                 {filteredAutomobiles.map((auto) => (
                     <div key={auto.id}>
                         <h2>{auto.make}</h2>
-                        <p>Years: {auto.year}</p>
-                        <p>Price: ${auto.price}</p>
-                        <p>Car body: {auto.car_body}</p>
-                        <p>Fuel Type: {auto.fuel_type}</p>
+                        <p>{MOCK_PAGE_STRINGS['CAR_YEARS_LABEL']}: {auto.year}</p>
+                        <p>{MOCK_PAGE_STRINGS['CAR_PRICE_LABEL']}: ${auto.price}</p>
+                        <p>{MOCK_PAGE_STRINGS['CAR_BODY_LABEL']}: {auto.car_body}</p>
+                        <p>{MOCK_PAGE_STRINGS['CAR_FUEL_LABEL']}: {auto.fuel_type}</p>
                     </div>
                 ))}
             </div>

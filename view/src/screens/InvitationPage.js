@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Center, Box, Heading, Text, Spinner, Alert, VStack } from 'native-base'; // Import NativeBase components
-
+import { Center, Box, Heading, Text, Spinner, Alert, VStack } from 'native-base';
+import { INVITATION_PAGE_STRINGS } from '../utils/constants';
 const InvitationPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -15,7 +15,7 @@ const InvitationPage = () => {
 
         if (!searchId) {
             setAlertMessage('Missing search ID!');
-            setLoading(false);  // Set loading to false as we're showing an error
+            setLoading(false);
             return;
         }
 
@@ -47,10 +47,11 @@ const InvitationPage = () => {
                 ) : (
                     <>
                         <Heading textAlign="center" mb={4}>
-                            Invitation Received
+                            {INVITATION_PAGE_STRINGS['INVITATION_HEADING']}
                         </Heading>
                         <Text textAlign="center" fontSize="md">
-                            We are redirecting you to the content...
+                            {INVITATION_PAGE_STRINGS['REDIRECT_MESSAGE']}
+
                         </Text>
                     </>
                 )}

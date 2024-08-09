@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, Heading, Text, Button } from 'native-base';
 import { useNavigate } from 'react-router-dom';
+import { PAGE_NOT_FOUND_STRINGS } from '../utils/constants';
+
 
 const PageNotFound = () => {
     const navigate = useNavigate();
@@ -16,13 +18,13 @@ const PageNotFound = () => {
             textAlign="center"
         >
             <Heading size="xl" mb={4}>
-                404 - Page Not Found
+                {PAGE_NOT_FOUND_STRINGS['HEADING']}
             </Heading>
             <Text fontSize="lg" mb={6}>
-                Oops! The page you are looking for does not exist.
+                {PAGE_NOT_FOUND_STRINGS['MESSAGE']}
             </Text>
             <Button colorScheme="blue" onPress={() => navigate('/home')}>
-                Go to Home
+                {PAGE_NOT_FOUND_STRINGS['BUTTON_TEXT']}
             </Button>
         </Box>
     );
