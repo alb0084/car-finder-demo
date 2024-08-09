@@ -17,6 +17,7 @@ const SlideBar = ({ isOpen, onClose }) => {
     const [alert, setAlert] = useState(false);
     const [messageAlert, setMessageAlert] = useState('')
     const [isSuccess, setIsSuccess] = useState(true);
+
     useEffect(() => {
         const fetchSearches = async () => {
             if (isOpen) {

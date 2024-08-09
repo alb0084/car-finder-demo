@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { selectAuth } from '../redux/slices/authSlice';
 import UserStatus from '../components/UserStatus';
 import HighlightText from '../components/HighlightText';
-import { fetchAutomobiles, saveSearch, deleteSearch } from '../api';
+import { fetchAutomobiles, saveSearch } from '../api';
 import Card from '../components/Card';
 
 import { HOME_SCREEN_STRINGS } from '../utils/constants';

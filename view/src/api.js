@@ -35,7 +35,7 @@ export const fetchAutomobiles = async (page, itemsPerPage) => {
 };
 
 export const saveSearch = async (searchDetails) => {
-    const response = await fetch(`${BASE_URL}/api/2saved-searches`, {
+    const response = await fetch(`${BASE_URL}/api/saved-searches`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -46,19 +46,6 @@ export const saveSearch = async (searchDetails) => {
 
     if (!response.ok) {
         throw new Error('Error while saving the search');
-    }
-
-    return response.json();
-};
-
-export const deleteSearch = async (id) => {
-    const response = await fetch(`${BASE_URL}/api/saved-searches/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-    });
-
-    if (!response.ok) {
-        throw new Error('Failed to delete search');
     }
 
     return response.json();
@@ -82,7 +69,7 @@ export const fetchSavedSearches = async () => {
 };
 
 export const deleteSavedSearch = async (searchId) => {
-    const response = await fetch(`${BASE_URL}/api/1saved-searches/${searchId}`, {
+    const response = await fetch(`${BASE_URL}/api/saved-searches/${searchId}`, {
         method: 'DELETE',
         credentials: 'include',
     });
