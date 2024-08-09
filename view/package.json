@@ -2,7 +2,6 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/alb0084/car-finder-demo",
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
     "@testing-library/user-event": "^13.5.0",
